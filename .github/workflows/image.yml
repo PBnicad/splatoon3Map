@@ -1,0 +1,33 @@
+name: schedule
+
+on:
+  schedule:
+    - cron: "0 2,4,6,8,10,12,14,16,18,20,22 * * *"
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      TZ: Asia/Shanghai
+
+    steps:
+      - name: Checkout Git Source
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Run Command
+        run: node index.js
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "final.png"
+        env:
+          github_token: ${{ secrets.TOKEN }}
